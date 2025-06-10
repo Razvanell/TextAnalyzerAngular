@@ -3,7 +3,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextAnalyzerService, AnalysisResult } from './text-analyzer.service';
 import { AnalysisType } from './analysis-type.enum';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 interface PreviousAnalysis {
@@ -19,12 +19,23 @@ interface PreviousAnalysis {
   imports: [CommonModule, FormsModule, TitleCasePipe],
   templateUrl: './text-analyzer.component.html',
   styleUrls: ['./text-analyzer.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TextAnalyzerComponent {
+
+  private readonly COMPONENT_NAME = '[TextAnalyzerComponent]';
+  // Log methods for consistent logging format
+  private log(method: string, message: string, ...args: any[]): void {
+    console.info(`${this.COMPONENT_NAME}[${method}] ${message}`, ...args);
+  }
+
+  private errorLog(method: string, message: string, ...args: any[]): void {
+    console.error(`${this.COMPONENT_NAME}[${method}] ${message}`, ...args);
+  }
+
+  // Component properties
   inputText: string = '';
   analysisType: AnalysisType = AnalysisType.VOWELS; // Default to VOWELS
-
   isOnline: boolean = false;
   isLoading: boolean = false;
   previousAnalyses: PreviousAnalysis[] = [];
@@ -36,7 +47,15 @@ export class TextAnalyzerComponent {
   constructor(private textAnalyzerService: TextAnalyzerService) { }
 
   analyzeText(): void {
+    const methodName = 'analyzeText';
     this.errorMessage = null;
+
+    if (!this.inputText || this.inputText.trim() === '') {
+      this.errorMessage = 'Please enter text to analyze.';
+      this.log(methodName, 'Client-side validation: Input text is empty. Request aborted.');
+      return;
+    }
+
     const currentAnalysis: PreviousAnalysis = {
       text: this.inputText,
       type: this.analysisType,
@@ -45,25 +64,38 @@ export class TextAnalyzerComponent {
     };
 
     if (this.isOnline) {
+      this.isLoading = true;
+      this.log(methodName, `Initiating online analysis request for type: ${this.analysisType}`);
+
       this.textAnalyzerService.analyzeOnline(this.inputText, this.analysisType)
         .pipe(
           catchError((error) => {
-            console.error('Error during online analysis:', error);
-            this.errorMessage = 'Failed to connect to backend. Please ensure the server is running.';
+            this.errorLog(methodName, 'Online analysis request failed. Error:', error);
+            const backendErrorMessage = error.error?.message || 'Failed to connect to backend. Please ensure the server is running or check network.';
+            this.errorMessage = `Error: ${backendErrorMessage}`;
             currentAnalysis.result = `Error: ${this.errorMessage}`;
             this.previousAnalyses.unshift(currentAnalysis);
             return of({});
+          }),
+          finalize(() => {
+            this.isLoading = false;
+            this.log(methodName, `Online analysis request finalized. isLoading set to: ${this.isLoading}`);
           })
         )
-        .subscribe((result) => {
-          if (!this.errorMessage) {
-            currentAnalysis.result = result;
-            this.previousAnalyses.unshift(currentAnalysis);
+        .subscribe({
+          next: (result) => {
+            if (!this.errorMessage) { // Ensure no prior error from catchError
+              currentAnalysis.result = result;
+              this.previousAnalyses.unshift(currentAnalysis);
+              this.log(methodName, 'Online analysis request successful. Result received:', result);
+            }
           }
         });
     } else {
+      this.log(methodName, 'Performing offline analysis.');
       currentAnalysis.result = this.textAnalyzerService.analyzeOffline(this.inputText, this.analysisType);
       this.previousAnalyses.unshift(currentAnalysis);
+      this.log(methodName, 'Offline analysis completed.');
     }
   }
 

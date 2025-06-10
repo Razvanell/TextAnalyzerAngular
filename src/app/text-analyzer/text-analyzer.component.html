@@ -2,25 +2,27 @@
     <h1>Text Analyzer</h1>
 
     <div class="input-section">
-        <textarea [(ngModel)]="inputText" placeholder="Enter text here..." rows="5"></textarea>
+        <textarea [(ngModel)]="inputText" placeholder="Enter text here..." rows="5" [disabled]="isLoading"></textarea>
 
         <div class="controls">
             <div class="radio-group">
                 <label *ngFor="let typeOption of analysisTypes">
-                    <input type="radio" name="analysisType" [value]="typeOption" [(ngModel)]="analysisType" />
+                    <input type="radio" name="analysisType" [value]="typeOption" [(ngModel)]="analysisType"
+                        [disabled]="isLoading" />
                     {{ typeOption | titlecase }}
                 </label>
             </div>
 
             <div class="toggle-switch">
                 <label class="switch">
-                    <input type="checkbox" [(ngModel)]="isOnline" />
+                    <input type="checkbox" [(ngModel)]="isOnline" [disabled]="isLoading" />
                     <span class="slider round"></span>
                 </label>
                 <span class="toggle-label">{{ isOnline ? 'Online' : 'Offline' }} Mode</span>
             </div>
 
-            <button (click)="analyzeText()">Analyze Text</button>
+            <button (click)="analyzeText()" [disabled]="isLoading"> {{ isLoading ? 'Analyzing...' : 'Analyze Text' }}
+            </button>
         </div>
     </div>
 
@@ -28,9 +30,12 @@
         {{ errorMessage }}
     </div>
 
+    <div *ngIf="isLoading" class="loading-indicator">
+        <p>Loading analysis...</p>
+    </div>
     <div class="previous-analyses">
         <h2>Previous Analyses</h2>
-        <div *ngIf="previousAnalyses.length === 0" class="no-history">
+        <div *ngIf="previousAnalyses.length === 0 && !isLoading" class="no-history">
             No analysis history yet.
         </div>
         <div *ngFor="let analysis of previousAnalyses" class="analysis-card"
