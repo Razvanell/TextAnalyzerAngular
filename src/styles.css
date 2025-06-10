@@ -1,7 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+/* Add global styles to this file, or import other style files */
+body {
+    background-color: #14171C;
+    color: #E0E0E0;
+}
+
 h1,
 h2 {
     text-align: center;
-    color: #333;
+    color: #1A73E8;
 }
-

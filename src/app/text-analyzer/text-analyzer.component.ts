@@ -1,13 +1,14 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextAnalyzerService, AnalysisResult } from './text-analyzer.service';
+import { AnalysisType } from './analysis-type.enum';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 interface PreviousAnalysis {
   text: string;
-  type: 'vowels' | 'consonants';
+  type: AnalysisType;
   mode: 'Online' | 'Offline';
   result: AnalysisResult | string;
 }
@@ -15,19 +16,24 @@ interface PreviousAnalysis {
 @Component({
   selector: 'app-text-analyzer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TitleCasePipe],
   templateUrl: './text-analyzer.component.html',
   styleUrls: ['./text-analyzer.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextAnalyzerComponent {
   inputText: string = '';
-  analysisType: 'vowels' | 'consonants' = 'vowels';
+  analysisType: AnalysisType = AnalysisType.VOWELS; // Default to VOWELS
+
   isOnline: boolean = false;
+  isLoading: boolean = false;
   previousAnalyses: PreviousAnalysis[] = [];
   errorMessage: string | null = null;
 
-  constructor(private textAnalyzerService: TextAnalyzerService) {}
+  public readonly AnalysisType = AnalysisType;
+  public readonly analysisTypes = Object.values(AnalysisType);
+
+  constructor(private textAnalyzerService: TextAnalyzerService) { }
 
   analyzeText(): void {
     this.errorMessage = null;
@@ -43,7 +49,7 @@ export class TextAnalyzerComponent {
         .pipe(
           catchError((error) => {
             console.error('Error during online analysis:', error);
-            this.errorMessage = 'Failed to connect to backend. Please ensure the backend server is running.';
+            this.errorMessage = 'Failed to connect to backend. Please ensure the server is running.';
             currentAnalysis.result = `Error: ${this.errorMessage}`;
             this.previousAnalyses.unshift(currentAnalysis);
             return of({});
@@ -61,6 +67,10 @@ export class TextAnalyzerComponent {
     }
   }
 
+  isErrorResult(result: AnalysisResult | string): boolean {
+    return typeof result === 'string' && result.startsWith('Error:');
+  }
+
   formatResult(result: AnalysisResult | string): string {
     if (typeof result === 'string') {
       return result;
@@ -71,10 +81,5 @@ export class TextAnalyzerComponent {
     return Object.entries(result)
       .map(([char, count]) => `Letter '${char}' appears ${count} times`)
       .join('<br>');
-  }
-
-  // >>> ADD THIS NEW HELPER METHOD <<<
-  isErrorResult(result: AnalysisResult | string): boolean {
-    return typeof result === 'string' && result.startsWith('Error:');
   }
 }

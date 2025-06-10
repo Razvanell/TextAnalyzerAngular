@@ -6,13 +6,9 @@
 
         <div class="controls">
             <div class="radio-group">
-                <label>
-                    <input type="radio" name="analysisType" value="vowels" [(ngModel)]="analysisType" />
-                    Vowels
-                </label>
-                <label>
-                    <input type="radio" name="analysisType" value="consonants" [(ngModel)]="analysisType" />
-                    Consonants
+                <label *ngFor="let typeOption of analysisTypes">
+                    <input type="radio" name="analysisType" [value]="typeOption" [(ngModel)]="analysisType" />
+                    {{ typeOption | titlecase }}
                 </label>
             </div>
 
