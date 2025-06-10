@@ -1,0 +1,48 @@
+<div class="container">
+    <h1>Text Analyzer</h1>
+
+    <div class="input-section">
+        <textarea [(ngModel)]="inputText" placeholder="Enter text here..." rows="5"></textarea>
+
+        <div class="controls">
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="analysisType" value="vowels" [(ngModel)]="analysisType" />
+                    Vowels
+                </label>
+                <label>
+                    <input type="radio" name="analysisType" value="consonants" [(ngModel)]="analysisType" />
+                    Consonants
+                </label>
+            </div>
+
+            <div class="toggle-switch">
+                <label class="switch">
+                    <input type="checkbox" [(ngModel)]="isOnline" />
+                    <span class="slider round"></span>
+                </label>
+                <span class="toggle-label">{{ isOnline ? 'Online' : 'Offline' }} Mode</span>
+            </div>
+
+            <button (click)="analyzeText()">Analyze Text</button>
+        </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+
+    <div class="previous-analyses">
+        <h2>Previous Analyses</h2>
+        <div *ngIf="previousAnalyses.length === 0" class="no-history">
+            No analysis history yet.
+        </div>
+        <div *ngFor="let analysis of previousAnalyses" class="analysis-card"
+            [class.error]="isErrorResult(analysis.result)">
+            <h3>Analysis ({{ analysis.mode }} mode)</h3>
+            <p><strong>Input:</strong> "{{ analysis.text }}"</p>
+            <p><strong>Type:</strong> {{ analysis.type | titlecase }}</p>
+            <div class="result-output" [innerHTML]="formatResult(analysis.result)"></div>
+        </div>
+    </div>
+</div>
