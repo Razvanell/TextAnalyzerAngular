@@ -4,12 +4,20 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AnalysisType } from './analysis-type.enum';
 import { AnalysisResult } from '../shared/models/analysis-result.interface';
+import { BackendAnalysisResult } from '../shared/models/analysis-result.backend.interface'; // Your new backend result interface
+import { environment } from '../../environments/environment';
 
+/**
+ * Service responsible for performing text analysis, both offline (client-side)
+ * and online (via a backend API). It provides methods to count vowels or consonants
+ * in a given text.
+ */
 @Injectable({
     providedIn: 'root',
 })
 export class AnalysisCalculationService {
-    private readonly apiUrl = 'http://localhost:8080/'; // Backend API URL
+    // Base URL for the backend API, fetched from environment configuration.
+    private readonly apiUrl = environment.apiBaseUrl;
 
     constructor(private http: HttpClient) { }
 
@@ -21,6 +29,13 @@ export class AnalysisCalculationService {
         return char.toLowerCase() !== char.toUpperCase();
     }
 
+    /**
+     * Performs text analysis directly on the client-side.
+     * Only characters found in the text will be included in the result.
+     * @param text The input string to be analyzed.
+     * @param type The type of analysis to perform (VOWELS or CONSONANTS).
+     * @returns An object (AnalysisResult) where keys are uppercase characters and values are their counts.
+     */
     analyzeOffline(
         text: string,
         type: AnalysisType
@@ -33,9 +48,7 @@ export class AnalysisCalculationService {
         const chars = text.split('');
 
         if (type === AnalysisType.VOWELS) {
-            const vowels = ['a', 'e', 'i', 'o', 'u'];
-            vowels.forEach((v) => (result[v.toUpperCase()] = 0));
-
+            // Only vowels found in the text will be added to the result.
             for (const char of chars) {
                 if (this.isVowel(char)) {
                     const lowerChar = char.toLowerCase();
@@ -54,19 +67,31 @@ export class AnalysisCalculationService {
         return result;
     }
 
+    /**
+     * Sends a request to the backend API to perform text analysis.
+     * @param text The input string to be analyzed.
+     * @param type The type of analysis to perform (VOWELS or CONSONANTS).
+     * @returns An Observable that emits the AnalysisResult (character counts) from the backend.
+     */
     analyzeOnline(text: string, type: AnalysisType): Observable<AnalysisResult> {
-        return this.http.get<AnalysisResult>(`${this.apiUrl + 'analyze'}`, {
+        // Specify BackendAnalysisResult as the expected type for the raw HTTP response
+        return this.http.get<BackendAnalysisResult>(`${this.apiUrl + 'analyze'}`, {
             params: {
                 type: type.toString(),
                 text: text,
             },
         }).pipe(
-            map(res => {
-                // Ensure keys are uppercase for consistency with offline
+            // Use the map operator to extract the 'characterCounts' property
+            // from the full BackendAnalysisResult received.
+            map(backendResponse => {
+                const counts = backendResponse.characterCounts;
                 const formattedResult: AnalysisResult = {};
-                for (const key in res) {
-                    if (Object.prototype.hasOwnProperty.call(res, key)) {
-                        formattedResult[key.toUpperCase()] = res[key];
+
+                // Iterate over the extracted counts to ensure keys are uppercase
+                // for consistency with your offline analysis.
+                for (const key in counts) {
+                    if (Object.prototype.hasOwnProperty.call(counts, key)) {
+                        formattedResult[key.toUpperCase()] = counts[key];
                     }
                 }
                 return formattedResult;

@@ -18,17 +18,3 @@
   overflow: hidden; /* Ensures no scrolling in this wrapper */
   background-color: #131313; /* Consistent with global dark theme */
 }
-
-/* src/app/app.component.css */
-
-:host {
-    display: flex;
-    height: 100vh;
-}
-
-.content-area {
-    flex-grow: 1;
-    padding: 40px; /* Increased padding to make the content area feel larger */
-    overflow-y: auto;
-    background-color: #131313;
-}

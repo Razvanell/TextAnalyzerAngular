@@ -1,111 +1,79 @@
-<mat-card class="material-analyzer-card">
-  <mat-card-header>
-    <mat-card-title>What would you like to know?</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="input-section">
-      <mat-form-field appearance="outline" class="full-width-input">
-        <mat-label>Enter Text</mat-label>
-        <textarea
-          matInput
-          #textareaElement
-          cdkTextareaAutosize
-          #autosize="cdkTextareaAutosize"
-          cdkAutosizeMinRows="4"
-          cdkAutosizeMaxRows="10"
-          placeholder="Type or paste your text here..."
-          [(ngModel)]="inputText"
-          [maxLength]="maxInputLength"
-          [disabled]="analysisStateManager.isLoading"
-          aria-label="Text input for analysis"
-        ></textarea>
-        <mat-hint align="end" [class.limit-reached]="inputText.length >= maxInputLength">
-          {{ inputText.length }} / {{ maxInputLength }}
-        </mat-hint>
+<div class="app-container">
+  <mat-card class="input-card">
+    <mat-card-header>
+      <mat-card-title class="card-header-title">What would you like to know?</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="input-card-content">
+      <mat-form-field appearance="outline" class="full-width-textarea-field">
+        <mat-label>Enter text here...</mat-label>
+        <textarea class="scrollbar" matInput #textareaElement cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="1" cdkAutosizeMaxRows="2" [(ngModel)]="inputText"
+          [disabled]="analysisStateManager.isLoading" [maxLength]="maxInputLength"
+          (input)="onTextareaInput()"></textarea>
       </mat-form-field>
 
-      <div class="controls-grid">
-        <mat-radio-group
-          aria-label="Select analysis type"
-          [(ngModel)]="analysisType"
-          [disabled]="analysisStateManager.isLoading"
-          class="analysis-type-group"
-        >
-          <mat-label>Analysis Type:</mat-label>
+      <div class="controls-wrapper">
+        <mat-radio-group class="analysis-type-group" [(ngModel)]="analysisType"
+          [disabled]="analysisStateManager.isLoading">
           <mat-radio-button *ngFor="let typeOption of analysisTypes" [value]="typeOption">
             {{ typeOption | titlecase }}
           </mat-radio-button>
         </mat-radio-group>
 
-        <mat-slide-toggle
-          [(ngModel)]="isOnline"
-          [disabled]="analysisStateManager.isLoading"
-          aria-label="Toggle online/offline mode"
-          class="mode-toggle"
-        >
-          {{ isOnline ? 'Online' : 'Offline' }} Mode
-        </mat-slide-toggle>
+        <div class="toggle-and-count-wrapper">
+          <mat-slide-toggle class="mode-toggle" [(ngModel)]="isOnline" [disabled]="analysisStateManager.isLoading">
+            {{ isOnline ? 'Online' : 'Offline' }} Mode
+          </mat-slide-toggle>
+
+          <span class="char-count" [class.limit-reached]="inputText.length >= maxInputLength">
+            {{ inputText.length }} / {{ maxInputLength }}
+          </span>
+        </div>
+
+        <button mat-mini-fab color="primary" (click)="analyzeText()"
+          [disabled]="!!analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)"
+          [matTooltip]="analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength) || ''"
+          matTooltipPosition="above" aria-live="polite">
+          <mat-icon *ngIf="analysisStateManager.isLoading" class="button-icon">
+            <i class="fas fa-spinner fa-spin"></i>
+          </mat-icon>
+          <mat-icon *ngIf="!analysisStateManager.isLoading" class="button-icon">
+            <i class="fas fa-paper-plane"></i>
+          </mat-icon>
+        </button>
       </div>
+    </mat-card-content>
+  </mat-card>
 
-      <div *ngIf="analysisStateManager.errorMessage" class="error-message" role="alert">
-        {{ analysisStateManager.errorMessage }}
+  <div *ngIf="analysisStateManager.errorMessage" class="error-message" role="alert">
+    {{ analysisStateManager.errorMessage }}
+  </div>
+
+  <mat-progress-bar *ngIf="analysisStateManager.isLoading" mode="indeterminate"
+    class="loading-progress-bar"></mat-progress-bar>
+
+  <mat-card-title class="card-header-title">History</mat-card-title>
+
+  <mat-card class="history-card">
+    <mat-card-content class="history-content-scroll scrollbar">
+      <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading"
+        class="no-history">
+        No previous requests yet.
       </div>
-    </div>
-  </mat-card-content>
-  <mat-card-actions class="card-actions">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="analyzeText()"
-      [disabled]="!!analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)"
-      [matTooltip]="analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength) || ''"
-      matTooltipPosition="above"
-      aria-live="polite"
-    >
-      <mat-icon *ngIf="analysisStateManager.isLoading" class="spinner-icon">
-        <i class="fas fa-spinner fa-spin"></i>
-      </mat-icon>
-      <mat-icon *ngIf="!analysisStateManager.isLoading">
-        <i class="fas fa-paper-plane"></i>
-      </mat-icon>
-      {{ analysisStateManager.isLoading ? 'Analyzing...' : 'Analyze' }}
-    </button>
-  </mat-card-actions>
-</mat-card>
-
-<!-- Loading Indicator (MatProgressBar) -->
-<mat-progress-bar
-  *ngIf="analysisStateManager.isLoading"
-  mode="indeterminate"
-  class="loading-progress-bar"
-></mat-progress-bar>
-
-<mat-card class="history-card">
-  <mat-card-header>
-    <mat-card-title>Analysis History</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="history-content-scroll">
-    <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading" class="no-history">
-      No previous requests yet.
-    </div>
-    <mat-list>
-      <mat-list-item *ngFor="let analysis of analysisHistoryService.previousAnalyses; let i = index">
-        <mat-card
-          class="analysis-item-card"
-          [class.error]="analysisHistoryService.isErrorResult(analysis.result)"
-        >
-          <mat-card-header>
-            <mat-card-title class="analysis-header-group">
+      <div *ngFor="let analysis of analysisHistoryService.previousAnalyses; let i = index">
+        <mat-card class="analysis-item-card" [class.error]="analysisHistoryService.isErrorResult(analysis.result)">
+          <mat-card-header class="analysis-item-header">
+            <mat-card-title class="analysis-type-text">
               Analysis type: {{ analysis.type | titlecase }} ({{ analysis.mode }} mode)
-              <span class="analysis-timestamp">{{ analysis.timestamp | date:'shortTime' }}</span>
             </mat-card-title>
+            <span class="analysis-timestamp">{{ analysis.timestamp | date:'shortTime' }}</span>
           </mat-card-header>
-          <mat-card-content>
+          <mat-card-content class="analysis-item-content">
             <p><strong>Input:</strong> "{{ analysis.text }}"</p>
             <div class="result-output" [innerHTML]="analysisHistoryService.formatResult(analysis.result)"></div>
           </mat-card-content>
         </mat-card>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

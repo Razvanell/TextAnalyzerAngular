@@ -13,7 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { CdkTextareaAutosize} from '@angular/cdk/text-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatListModule } from '@angular/material/list'; // <-- ADD THIS IMPORT
+import { MatListModule } from '@angular/material/list';
 
 // Core Services and Models
 import { AnalysisType } from '../core/analysis-type.enum';
@@ -39,7 +39,7 @@ import { AnalysisWorkflowService } from '../core/analysis-workflow.service';
     MatIconModule,
     CdkTextareaAutosize,
     MatTooltipModule,
-    MatListModule // <-- ADD THIS TO THE IMPORTS ARRAY
+    MatListModule
   ],
   templateUrl: './material-analyzer.component.html',
   styleUrls: ['./material-analyzer.component.css'],
@@ -71,6 +71,16 @@ export class MaterialAnalyzerComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     // This hook remains, though direct manipulation might not be needed
     // if cdkTextareaAutosize handles everything automatically.
+  }
+
+  /**
+   * Handles the input event from the textarea.
+   * This method is triggered when the user types in the textarea.
+   * Logic related to input processing, like character counting or
+   * validation that needs to run on every keystroke, can be placed here.
+   */
+  onTextareaInput(): void {
+    this.log('onTextareaInput', 'Textarea input changed.');
   }
 
   analyzeText(): void {

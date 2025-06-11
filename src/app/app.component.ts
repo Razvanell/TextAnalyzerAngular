@@ -9,8 +9,6 @@ import { SideNavComponent } from './side-nav/side-nav.component'; // <--- ADD TH
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterLink, // Important for routerLink directive
-    RouterLinkActive,
     SideNavComponent
   ],
   templateUrl: './app.component.html',
