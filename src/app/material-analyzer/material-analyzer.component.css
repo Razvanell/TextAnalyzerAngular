@@ -1,0 +1,138 @@
+.material-analyzer-card {
+  max-width: 62.5rem;
+  margin: 1.25rem auto;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.input-section {
+  margin-bottom: 1.25rem;
+}
+
+.full-width-input {
+  width: 100%;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  align-items: center;
+}
+
+.analysis-type-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.mode-toggle {
+  justify-self: end;
+}
+
+.char-count {
+  font-size: 0.8em;
+  color: #777;
+  text-align: right;
+}
+
+.limit-reached {
+  color: red;
+  font-weight: bold;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem 1rem;
+}
+
+.spinner-icon {
+  margin-right: 0.5rem;
+}
+
+.loading-progress-bar {
+  margin-top: 1.25rem;
+  max-width: 37.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-message {
+  color: #f44336;
+  background-color: #ffebee;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.25rem;
+  margin-top: 0.9375rem;
+  border: 0.0625rem solid #ef9a9a;
+  text-align: center;
+}
+
+.history-card {
+  max-width: 62.5rem;
+  margin: 1.25rem auto;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.history-content-scroll {
+  max-height: 25rem;
+  overflow-y: auto;
+  padding-right: 0.9375rem;
+}
+
+.no-history {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 1.25rem 0;
+}
+
+.analysis-item-card {
+  width: 100%;
+  margin-bottom: 0.9375rem;
+  border: 0.0625rem solid #eee;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.analysis-item-card:hover {
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.analysis-item-card.error {
+  border-left: 0.3125rem solid #f44336;
+}
+
+.analysis-header-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.analysis-timestamp {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.result-output {
+  margin-top: 0.625rem;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f8f8f8;
+  padding: 0.625rem;
+  border-radius: 0.25rem;
+  white-space: pre-wrap;
+}
+
+h1,
+h2 {
+  color: #333;
+}
+
+p {
+  line-height: 1.5;
+}

@@ -1,0 +1,34 @@
+/* src/app/app.component.css */
+
+.app-container {
+  display: flex; /* Makes sidebar and main content side-by-side */
+  height: 100%; /* IMPORTANT: Makes app-container fill the full height of body */
+  width: 100%; /* Makes app-container fill the full width */
+  background-color: #131313; /* Consistent with global theme */
+  color: #E0E0E0; /* Consistent with global theme */
+}
+
+.main-content-wrapper {
+  flex-grow: 1; /* Takes all remaining horizontal space */
+  display: flex; /* Uses flexbox to center content vertically/horizontally */
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  height: 100%; /* IMPORTANT: Makes main content wrapper fill its parent's height */
+  padding: 0; /* Let your component's container handle its own spacing */
+  overflow: hidden; /* Ensures no scrolling in this wrapper */
+  background-color: #131313; /* Consistent with global dark theme */
+}
+
+/* src/app/app.component.css */
+
+:host {
+    display: flex;
+    height: 100vh;
+}
+
+.content-area {
+    flex-grow: 1;
+    padding: 40px; /* Increased padding to make the content area feel larger */
+    overflow-y: auto;
+    background-color: #131313;
+}

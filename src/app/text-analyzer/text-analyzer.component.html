@@ -3,7 +3,8 @@
     <div class="input-section">
         <div class="textarea-controls-wrapper">
             <textarea class="scrollbar" #textareaElement [(ngModel)]="inputText" placeholder="Enter text here..."
-                rows="5" [disabled]="analysisStateManager.isLoading" [maxLength]="maxInputLength" (input)="onTextareaInput()"> </textarea>
+                rows="5" [disabled]="analysisStateManager.isLoading" [maxLength]="maxInputLength"
+                (input)="onTextareaInput()"> </textarea>
 
             <div class="controls">
                 <div class="radio-group">
@@ -26,9 +27,9 @@
                     {{ inputText.length }} / {{ maxInputLength }}
                 </span>
                 <button (click)="analyzeText()"
-                    [disabled]="analysisStateManager.isLoading || !inputText || inputText.trim() === '' || analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength) !== ''"
-                    [class.active]="!analysisStateManager.isLoading && inputText && inputText.trim() !== '' && analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength) === '' && inputText.length <= maxInputLength"
-                    [title]="analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength)">
+                    [disabled]="!!analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)"
+                    [class.active]="!analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)"
+                    [title]="analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)">
                     <ng-container *ngIf="analysisStateManager.isLoading">
                         <i class="fas fa-spinner fa-spin"></i>
                     </ng-container>
@@ -50,7 +51,8 @@
 
     <div class="history-scroll-container scrollbar">
         <h2>History</h2>
-        <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading" class="no-history">
+        <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading"
+            class="no-history">
             No previous requests yet.
         </div>
         <div *ngFor="let analysis of analysisHistoryService.previousAnalyses" class="analysis-card"

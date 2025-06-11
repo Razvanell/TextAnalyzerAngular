@@ -1,0 +1,111 @@
+<mat-card class="material-analyzer-card">
+  <mat-card-header>
+    <mat-card-title>What would you like to know?</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="input-section">
+      <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Enter Text</mat-label>
+        <textarea
+          matInput
+          #textareaElement
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="4"
+          cdkAutosizeMaxRows="10"
+          placeholder="Type or paste your text here..."
+          [(ngModel)]="inputText"
+          [maxLength]="maxInputLength"
+          [disabled]="analysisStateManager.isLoading"
+          aria-label="Text input for analysis"
+        ></textarea>
+        <mat-hint align="end" [class.limit-reached]="inputText.length >= maxInputLength">
+          {{ inputText.length }} / {{ maxInputLength }}
+        </mat-hint>
+      </mat-form-field>
+
+      <div class="controls-grid">
+        <mat-radio-group
+          aria-label="Select analysis type"
+          [(ngModel)]="analysisType"
+          [disabled]="analysisStateManager.isLoading"
+          class="analysis-type-group"
+        >
+          <mat-label>Analysis Type:</mat-label>
+          <mat-radio-button *ngFor="let typeOption of analysisTypes" [value]="typeOption">
+            {{ typeOption | titlecase }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <mat-slide-toggle
+          [(ngModel)]="isOnline"
+          [disabled]="analysisStateManager.isLoading"
+          aria-label="Toggle online/offline mode"
+          class="mode-toggle"
+        >
+          {{ isOnline ? 'Online' : 'Offline' }} Mode
+        </mat-slide-toggle>
+      </div>
+
+      <div *ngIf="analysisStateManager.errorMessage" class="error-message" role="alert">
+        {{ analysisStateManager.errorMessage }}
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions class="card-actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="analyzeText()"
+      [disabled]="!!analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength)"
+      [matTooltip]="analysisStateManager.getAnalysisButtonTooltipText(inputText, maxInputLength) || ''"
+      matTooltipPosition="above"
+      aria-live="polite"
+    >
+      <mat-icon *ngIf="analysisStateManager.isLoading" class="spinner-icon">
+        <i class="fas fa-spinner fa-spin"></i>
+      </mat-icon>
+      <mat-icon *ngIf="!analysisStateManager.isLoading">
+        <i class="fas fa-paper-plane"></i>
+      </mat-icon>
+      {{ analysisStateManager.isLoading ? 'Analyzing...' : 'Analyze' }}
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<!-- Loading Indicator (MatProgressBar) -->
+<mat-progress-bar
+  *ngIf="analysisStateManager.isLoading"
+  mode="indeterminate"
+  class="loading-progress-bar"
+></mat-progress-bar>
+
+<mat-card class="history-card">
+  <mat-card-header>
+    <mat-card-title>Analysis History</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="history-content-scroll">
+    <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading" class="no-history">
+      No previous requests yet.
+    </div>
+    <mat-list>
+      <mat-list-item *ngFor="let analysis of analysisHistoryService.previousAnalyses; let i = index">
+        <mat-card
+          class="analysis-item-card"
+          [class.error]="analysisHistoryService.isErrorResult(analysis.result)"
+        >
+          <mat-card-header>
+            <mat-card-title class="analysis-header-group">
+              Analysis type: {{ analysis.type | titlecase }} ({{ analysis.mode }} mode)
+              <span class="analysis-timestamp">{{ analysis.timestamp | date:'shortTime' }}</span>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p><strong>Input:</strong> "{{ analysis.text }}"</p>
+            <div class="result-output" [innerHTML]="analysisHistoryService.formatResult(analysis.result)"></div>
+          </mat-card-content>
+        </mat-card>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AnalysisResult } from './text-analyzer.service';
+import { AnalysisResult } from '../shared/models/analysis-result.interface';
 import { AnalysisType } from './analysis-type.enum';
-
-/**
- * Represents a single previous analysis entry.
- */
-interface PreviousAnalysis {
-  text: string;
-  type: AnalysisType;
-  mode: 'Online' | 'Offline';
-  result: AnalysisResult | string;
-  timestamp: Date;
-}
+import { PreviousAnalysis } from '../shared/models/previous-analysis.interface';
 
 @Injectable({
   providedIn: 'root', // Makes the service a singleton and available throughout the app
@@ -61,9 +51,9 @@ export class AnalysisHistoryService {
       this.log(methodName, 'Found existing SUCCESSFUL analysis in history. Promoting it.');
       const index = this._previousAnalyses.indexOf(existingAnalysis);
       if (index > -1) {
-        this._previousAnalyses.splice(index, 1); // Remove from current position
+        this._previousAnalyses.splice(index, 1);
       }
-      this._previousAnalyses.unshift(existingAnalysis); // Add to the top
+      this._previousAnalyses.unshift(existingAnalysis);
     }
     return existingAnalysis;
   }

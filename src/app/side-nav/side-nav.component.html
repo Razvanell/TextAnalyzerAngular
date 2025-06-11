@@ -1,0 +1,11 @@
+<aside class="sidebar">
+    <nav>
+        <h2>Model</h2>
+        <div class="dropdown-wrapper">
+            <select [(ngModel)]="selectedModel" (change)="navigateToModel($event)" class="model-select">
+                <option value="/analyze">Standard</option>
+                <option value="/material-analyze">Material</option>
+            </select>
+        </div>
+    </nav>
+</aside>

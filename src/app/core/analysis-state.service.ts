@@ -1,7 +1,7 @@
+// src/app/core/analysis-state.service.ts
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AnalysisHistoryService } from './analysis-history.service';
-import { AnalysisType } from './analysis-type.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -20,13 +20,13 @@ export class AnalysisStateManager {
     public readonly isLoading$: Observable<boolean> = this._isLoading$$.asObservable();
     public readonly errorMessage$: Observable<string | null> = this._errorMessage$$.asObservable();
 
-    constructor(private analysisHistoryService: AnalysisHistoryService) { // Inject AnalysisHistoryService
+    constructor() {
         this.log('constructor', 'Analysis State Manager initialized.');
     }
 
     /**
      * Sets the loading state.
-     * @param loading 
+     * @param loading
      */
     setLoading(loading: boolean): void {
         if (this._isLoading$$.getValue() !== loading) {
@@ -69,19 +69,15 @@ export class AnalysisStateManager {
     }
 
     /**
-     * Provides a tooltip message for the analyze button based on its disabled state.
+     * Provides a tooltip message for the analyze button based on loading state or input validity.
      * @param inputText The current input text from the component.
-     * @param analysisType The current analysis type from the component.
-     * @param isOnline The current online/offline mode from the component.
      * @param maxInputLength The maximum allowed input length.
-     * @returns A tooltip message string, or an empty string if the button should be enabled.
+     * @returns A tooltip message string, or null if the button should be enabled.
      */
     getAnalysisButtonTooltipText(
         inputText: string,
-        analysisType: AnalysisType,
-        isOnline: boolean,
         maxInputLength: number
-    ): string {
+    ): string | null {
         if (this.isLoading) {
             return 'Analysis in progress...';
         }
@@ -91,17 +87,7 @@ export class AnalysisStateManager {
         if (inputText.length > maxInputLength) {
             return `Input exceeds maximum character limit of ${maxInputLength}.`;
         }
-        const mode = isOnline ? 'Online' : 'Offline';
-        const found = this.analysisHistoryService.previousAnalyses.find(analysis =>
-            analysis.text === inputText &&
-            analysis.type === analysisType &&
-            analysis.mode === mode &&
-            !this.analysisHistoryService.isErrorResult(analysis.result)
-        );
-        if (found) {
-            return 'This analysis has already been performed successfully.';
-        }
-        return '';
+
+        return null; // Return null if the button should be enabled
     }
 }
-

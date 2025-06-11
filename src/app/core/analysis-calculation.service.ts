@@ -1,21 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AnalysisType } from './analysis-type.enum';
-
-export interface AnalysisResult {
-    [key: string]: number;
-}
+import { AnalysisResult } from '../shared/models/analysis-result.interface';
 
 @Injectable({
     providedIn: 'root',
 })
-export class TextAnalyzerService {
+export class AnalysisCalculationService {
     private readonly apiUrl = 'http://localhost:8080/'; // Backend API URL
 
     constructor(private http: HttpClient) { }
-
 
     private isVowel(char: string): boolean {
         return 'aeiouAEIOU'.includes(char);
@@ -78,5 +74,3 @@ export class TextAnalyzerService {
         );
     }
 }
-
-export { AnalysisType };
