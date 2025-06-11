@@ -3,20 +3,20 @@
     <div class="input-section">
         <div class="textarea-controls-wrapper">
             <textarea class="scrollbar" #textareaElement [(ngModel)]="inputText" placeholder="Enter text here..."
-                rows="5" [disabled]="isLoading" [maxLength]="maxInputLength" (input)="onTextareaInput()"> </textarea>
+                rows="5" [disabled]="analysisStateManager.isLoading" [maxLength]="maxInputLength" (input)="onTextareaInput()"> </textarea>
 
             <div class="controls">
                 <div class="radio-group">
                     <label *ngFor="let typeOption of analysisTypes">
                         <input type="radio" name="analysisType" [value]="typeOption" [(ngModel)]="analysisType"
-                            [disabled]="isLoading" />
+                            [disabled]="analysisStateManager.isLoading" />
                         {{ typeOption | titlecase }}
                     </label>
                 </div>
 
                 <div class="toggle-switch">
                     <label class="switch">
-                        <input type="checkbox" [(ngModel)]="isOnline" [disabled]="isLoading" />
+                        <input type="checkbox" [(ngModel)]="isOnline" [disabled]="analysisStateManager.isLoading" />
                         <span class="slider round"></span>
                     </label>
                     <span class="toggle-label">{{ isOnline ? 'Online' : 'Offline' }} Mode</span>
@@ -26,13 +26,13 @@
                     {{ inputText.length }} / {{ maxInputLength }}
                 </span>
                 <button (click)="analyzeText()"
-                    [disabled]="isLoading || !inputText || inputText.trim() === '' || findExistingAnalysis(inputText, analysisType, isOnline) || inputText.length > maxInputLength"
-                    [class.active]="!isLoading && inputText && inputText.trim() !== '' && !findExistingAnalysis(inputText, analysisType, isOnline) && inputText.length <= maxInputLength"
-                    [title]="getButtonTooltipText()">
-                    <ng-container *ngIf="isLoading">
+                    [disabled]="analysisStateManager.isLoading || !inputText || inputText.trim() === '' || analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength) !== ''"
+                    [class.active]="!analysisStateManager.isLoading && inputText && inputText.trim() !== '' && analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength) === '' && inputText.length <= maxInputLength"
+                    [title]="analysisStateManager.getAnalysisButtonTooltipText(inputText, analysisType, isOnline, maxInputLength)">
+                    <ng-container *ngIf="analysisStateManager.isLoading">
                         <i class="fas fa-spinner fa-spin"></i>
                     </ng-container>
-                    <ng-container *ngIf="!isLoading">
+                    <ng-container *ngIf="!analysisStateManager.isLoading">
                         <i class="fas fa-paper-plane"></i>
                     </ng-container>
                 </button>
@@ -40,21 +40,21 @@
         </div>
     </div>
 
-    <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+    <div *ngIf="analysisStateManager.errorMessage" class="error-message">
+        {{ analysisStateManager.errorMessage }}
     </div>
 
-    <div *ngIf="isLoading" class="loading-indicator">
+    <div *ngIf="analysisStateManager.isLoading" class="loading-indicator">
         <p>Loading analysis...</p>
     </div>
 
     <div class="history-scroll-container scrollbar">
         <h2>History</h2>
-        <div *ngIf="previousAnalyses.length === 0 && !isLoading" class="no-history">
+        <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading" class="no-history">
             No previous requests yet.
         </div>
-        <div *ngFor="let analysis of previousAnalyses" class="analysis-card"
-            [class.error]="isErrorResult(analysis.result)">
+        <div *ngFor="let analysis of analysisHistoryService.previousAnalyses" class="analysis-card"
+            [class.error]="analysisHistoryService.isErrorResult(analysis.result)">
             <h3>
                 <div class="analysis-header-group">
                     <span>Analysis type: {{ analysis.type | titlecase }} ({{ analysis.mode }} mode)</span>
@@ -62,7 +62,7 @@
                 <span class="analysis-timestamp">{{ analysis.timestamp | date:'shortTime' }}</span>
             </h3>
             <p><strong>Input:</strong> "{{ analysis.text }}"</p>
-            <div class="result-output" [innerHTML]="formatResult(analysis.result)"></div>
+            <div class="result-output" [innerHTML]="analysisHistoryService.formatResult(analysis.result)"></div>
         </div>
     </div>
 </div>
