@@ -6,7 +6,7 @@ import { AnalysisCalculationService } from './analysis-calculation.service';
 import { AnalysisHistoryService } from './analysis-history.service';
 import { AnalysisStateManager } from './analysis-state.service';
 
-import { AnalysisType } from './analysis-type.enum';
+import { AnalysisType } from '../shared/models/analysis-type.enum';
 import { PreviousAnalysis } from '../shared/models/previous-analysis.interface';
 
 @Injectable({
@@ -108,15 +108,15 @@ export class AnalysisWorkflowService implements OnDestroy {
     private performOnlineAnalysis(
         inputText: string,
         analysisType: AnalysisType,
-        currentAnalysis: PreviousAnalysis, // 'currentAnalysis' is used here
+        currentAnalysis: PreviousAnalysis,
         methodName: string
     ): void {
         this.log(methodName, `Initiating online analysis request for type: ${analysisType}`);
 
         const httpRequest$ = this.analysisCalculationService.analyzeOnline(inputText, analysisType);
-        const minLoadingDuration$ = timer(this.MIN_LOADING_DURATION_MS); // 'MIN_LOADING_DURATION_MS' is used here
+        const minLoadingDuration$ = timer(this.MIN_LOADING_DURATION_MS);
 
-        const subscription = forkJoin([httpRequest$, minLoadingDuration$]) // 'subscription' is used here
+        const subscription = forkJoin([httpRequest$, minLoadingDuration$])
             .pipe(
                 finalize(() => {
                     this.analysisStateManager.setLoading(false);
@@ -125,47 +125,47 @@ export class AnalysisWorkflowService implements OnDestroy {
             )
             .subscribe({
                 next: ([result, _]) => {
-                    currentAnalysis.result = result; // 'currentAnalysis' is used here
+                    currentAnalysis.result = result;
                     this.log(methodName, 'Online analysis request successful. Result received:', result);
-                    this.analysisHistoryService.addAnalysis(currentAnalysis); // 'currentAnalysis' is used here
+                    this.analysisHistoryService.addAnalysis(currentAnalysis);
                 },
                 error: (err) => {
                     this.errorLog(methodName, 'Online analysis subscription ended with error.', err);
                     if (typeof currentAnalysis.result !== 'string' || !currentAnalysis.result.startsWith('Error:')) {
                         currentAnalysis.result = `Error: ${this.analysisStateManager.errorMessage || 'An error occurred during online analysis.'}`;
                     }
-                    this.analysisHistoryService.addAnalysis(currentAnalysis); // 'currentAnalysis' is used here
+                    this.analysisHistoryService.addAnalysis(currentAnalysis);
                 }
             });
-        this.subscriptions.add(subscription); // 'subscriptions' is used here
+        this.subscriptions.add(subscription);
     }
 
     private performOfflineAnalysis(
         inputText: string,
         analysisType: AnalysisType,
-        currentAnalysis: PreviousAnalysis, // 'currentAnalysis' is used here
+        currentAnalysis: PreviousAnalysis,
         methodName: string
     ): void {
         this.log(methodName, 'Performing offline analysis.');
 
-        const subscription = of(this.analysisCalculationService.analyzeOffline(inputText, analysisType)) // 'subscription' is used here
+        const subscription = of(this.analysisCalculationService.analyzeOffline(inputText, analysisType))
             .pipe(
-                delay(this.MIN_LOADING_DURATION_MS), // 'MIN_LOADING_DURATION_MS' is used here
+                delay(this.MIN_LOADING_DURATION_MS),
                 finalize(() => {
                     this.analysisStateManager.setLoading(false);
                     this.log(methodName, 'Offline analysis finalized after minimum duration.');
                 })
             )
             .subscribe(result => {
-                currentAnalysis.result = result; // 'currentAnalysis' is used here
-                this.analysisHistoryService.addAnalysis(currentAnalysis); // 'currentAnalysis' is used here
+                currentAnalysis.result = result;
+                this.analysisHistoryService.addAnalysis(currentAnalysis);
                 this.log(methodName, 'Offline analysis completed.');
             });
-        this.subscriptions.add(subscription); // 'subscriptions' is used here
+        this.subscriptions.add(subscription);
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe(); // 'subscriptions' is used here
+        this.subscriptions.unsubscribe();
         this.log('ngOnDestroy', 'Subscriptions unsubscribed.');
     }
 }

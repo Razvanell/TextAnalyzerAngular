@@ -16,7 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
 
 // Core Services and Models
-import { AnalysisType } from '../core/analysis-type.enum';
+import { AnalysisType } from '../shared/models/analysis-type.enum';
 import { AnalysisHistoryService } from '../core/analysis-history.service';
 import { AnalysisStateManager } from '../core/analysis-state.service';
 import { AnalysisWorkflowService } from '../core/analysis-workflow.service';

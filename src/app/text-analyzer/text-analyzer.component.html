@@ -9,7 +9,7 @@
             <div class="controls">
                 <div class="radio-group">
                     <label *ngFor="let typeOption of analysisTypes">
-                        <input type="radio" name="analysisType" [value]="typeOption" [(ngModel)]="analysisType"
+                        <input type="radio" name="analysisType" [attr.value]="typeOption" [(ngModel)]="analysisType"
                             [disabled]="analysisStateManager.isLoading" />
                         {{ typeOption | titlecase }}
                     </label>
@@ -49,6 +49,7 @@
         <p>Loading analysis...</p>
     </div>
 
+    <!-- History Section-->
     <div class="history-scroll-container scrollbar">
         <h2>History</h2>
         <div *ngIf="analysisHistoryService.previousAnalyses.length === 0 && !analysisStateManager.isLoading"

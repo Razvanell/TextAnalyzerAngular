@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewIni
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { AnalysisType } from '../core/analysis-type.enum';
+import { AnalysisType } from '../shared/models/analysis-type.enum';
 import { AnalysisHistoryService } from '../core/analysis-history.service';
 import { AnalysisStateManager } from '../core/analysis-state.service';
 import { AnalysisWorkflowService } from '../core/analysis-workflow.service';

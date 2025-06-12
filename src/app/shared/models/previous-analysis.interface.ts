@@ -1,4 +1,4 @@
-import { AnalysisType } from '../../core/analysis-type.enum';
+import { AnalysisType } from "./analysis-type.enum";
 import { AnalysisResult } from './analysis-result.interface';
 
 export interface PreviousAnalysis {

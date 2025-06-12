@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AnalysisResult } from '../shared/models/analysis-result.interface';
-import { AnalysisType } from './analysis-type.enum';
+import { AnalysisType } from '../shared/models/analysis-type.enum';
 import { PreviousAnalysis } from '../shared/models/previous-analysis.interface';
 
 @Injectable({
