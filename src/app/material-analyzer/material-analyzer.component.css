@@ -253,6 +253,36 @@
   padding-right: 5px;
 }
 
+/* Analysis Card Input Text Scrolling for Material Design */
+.analysis-item-content .analysis-input-paragraph {
+  display: flex;
+  /* Use flexbox to align "Input:" and the text nicely */
+  align-items: baseline;
+  /* Align the text baselines */
+  margin: 0.3125rem 0;
+}
+
+.analysis-item-content .analysis-input-paragraph strong {
+  flex-shrink: 0;
+  /* Prevent "Input:" from shrinking */
+  margin-right: 0.5em;
+  /* Add some space between "Input:" and the text */
+}
+
+.analysis-input-text-material {
+  display: inline-block;
+  /* Essential for max-height and overflow to work */
+  flex-grow: 1;
+  /* Allow the text span to take up available space */
+  max-height: 5em;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  /* Preserve line breaks and whitespace */
+  word-break: break-word;
+  /* Break long words to prevent overflow */
+  padding-right: 5px;
+}
+
 /* Result Output */
 .result-output {
     margin-top: 0.625rem;
@@ -316,7 +346,7 @@
     /* Controls Wrapper */
     .controls-wrapper {
         flex-direction: column; /* Stack controls vertically */
-        align-items: stretch; /* Stretch items to fill width */
+        align-items: center; /* Stretch items to fill width */
         gap: 0.6rem; /* Reduce gap between control elements */
         padding: 0; /* Adjust padding for controls */
     }

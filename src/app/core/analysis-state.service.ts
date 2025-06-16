@@ -88,6 +88,6 @@ export class AnalysisStateManager {
             return `Input exceeds maximum character limit of ${maxInputLength}.`;
         }
 
-        return null; // Return null if the button should be enabled
+        return ''; // Return an empty text if the button should be enabled
     }
 }
