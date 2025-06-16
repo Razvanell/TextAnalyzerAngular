@@ -10,7 +10,7 @@ import { AnalysisType } from '../shared/models/analysis-type.enum';
 import { PreviousAnalysis } from '../shared/models/previous-analysis.interface';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root' // Makes the service a singleton and available throughout the app
 })
 export class AnalysisWorkflowService implements OnDestroy {
 
@@ -23,7 +23,7 @@ export class AnalysisWorkflowService implements OnDestroy {
         console.error(`${this.COMPONENT_NAME}[${method}] ${message}`, ...args);
     }
 
-    private readonly MIN_LOADING_DURATION_MS = 1000;
+    private readonly MIN_LOADING_DURATION_MS = 600; // Minimum duration to show a loading spinner
     private subscriptions = new Subscription(); // Essential for managing RxJS subscriptions
 
     constructor(
@@ -35,7 +35,7 @@ export class AnalysisWorkflowService implements OnDestroy {
     }
 
     /**
-     * Orchestrates the text analysis process.
+     * Handles the text analysis process.
      * This method contains the shared logic for validation, history check, and initiating analysis.
      * @param inputText The text to analyze.
      * @param analysisType The type of analysis to perform.
@@ -49,11 +49,10 @@ export class AnalysisWorkflowService implements OnDestroy {
         maxInputLength: number
     ): void {
         const methodName = 'analyzeText';
+        const mode = isOnline ? 'Online' : 'Offline';
         this.analysisStateManager.clearErrorMessage();
 
-        const mode = isOnline ? 'Online' : 'Offline'; // 'mode' is used below
-
-        // 1. Primary Validation (consistent with button disabled state)
+        // 1. Primary Validation: Checks if input is valid or if analysis is already in progress.
         const validationReason = this.analysisStateManager.getAnalysisButtonTooltipText(
             inputText,
             maxInputLength
@@ -69,7 +68,7 @@ export class AnalysisWorkflowService implements OnDestroy {
         const existingAnalysis = this.analysisHistoryService.findAndPromoteSuccessfulAnalysis(
             inputText,
             analysisType,
-            mode // 'mode' is used here
+            mode
         );
 
         if (existingAnalysis) {
@@ -79,21 +78,30 @@ export class AnalysisWorkflowService implements OnDestroy {
         }
 
         // 3. All checks passed: Proceed with starting a new analysis.
-        this.startAnalysisProcess(inputText, analysisType, isOnline, mode); // 'mode' is passed here
+        this.startAnalysisProcess(inputText, analysisType, isOnline, mode);
     }
 
+    /**
+     * Initiates the actual analysis process, setting loading state and determining online/offline execution.
+     * @param inputText The text to analyze.
+     * @param analysisType The type of analysis to perform.
+     * @param isOnline Whether to perform online or offline analysis.
+     * @param mode The analysis mode ('Online' or 'Offline') string.
+     */
     private startAnalysisProcess(
         inputText: string,
         analysisType: AnalysisType,
         isOnline: boolean,
-        mode: 'Online' | 'Offline' // 'mode' is received here
+        mode: 'Online' | 'Offline'
     ): void {
         const methodName = 'startAnalysisProcess';
         this.analysisStateManager.setLoading(true);
-        const currentAnalysis: PreviousAnalysis = { // 'currentAnalysis' object is populated
+
+        // Creates an object to represent the current analysis, which will be added to history.
+        const currentAnalysis: PreviousAnalysis = {
             text: inputText,
             type: analysisType,
-            mode: mode, // 'mode' is used here
+            mode: mode,
             result: {},
             timestamp: new Date()
         };
@@ -105,6 +113,13 @@ export class AnalysisWorkflowService implements OnDestroy {
         }
     }
 
+    /**
+     * Handles the execution of an online text analysis, via HTTP request.
+     * @param inputText The text for analysis.
+     * @param analysisType The type of analysis.
+     * @param currentAnalysis The `PreviousAnalysis` object to update and save.
+     * @param methodName The name of the calling method for logging.
+     */
     private performOnlineAnalysis(
         inputText: string,
         analysisType: AnalysisType,
@@ -113,18 +128,18 @@ export class AnalysisWorkflowService implements OnDestroy {
     ): void {
         this.log(methodName, `Initiating online analysis request for type: ${analysisType}`);
 
-        const httpRequest$ = this.analysisCalculationService.analyzeOnline(inputText, analysisType);
+        const httpRequest$ = this.analysisCalculationService.analyzeOnline(inputText, analysisType); // Observable for the analysis HTTP request
         const minLoadingDuration$ = timer(this.MIN_LOADING_DURATION_MS);
 
+        // Combines observables: HTTP request & loading timer so both complete before processing results.
         const subscription = forkJoin([httpRequest$, minLoadingDuration$])
-            .pipe(
+            .pipe( // chain together RxJS operators
                 finalize(() => {
                     this.analysisStateManager.setLoading(false);
-                    this.log(methodName, `Online analysis request finalized. isLoading set to: ${this.analysisStateManager.isLoading}`);
                 })
             )
-            .subscribe({
-                next: ([result, _]) => {
+            .subscribe({   // Subscribes to the combined observable to handle success (next) or error.
+                next: ([result, _]) => { // `_` indicates the second value (timer) is ignored
                     currentAnalysis.result = result;
                     this.log(methodName, 'Online analysis request successful. Result received:', result);
                     this.analysisHistoryService.addAnalysis(currentAnalysis);
@@ -140,6 +155,13 @@ export class AnalysisWorkflowService implements OnDestroy {
         this.subscriptions.add(subscription);
     }
 
+    /**
+     * Handles the execution of an offline (local) text analysis.
+     * @param inputText The text for analysis.
+     * @param analysisType The type of analysis.
+     * @param currentAnalysis The `PreviousAnalysis` object to update and save.
+     * @param methodName The name of the calling method for logging.
+     */
     private performOfflineAnalysis(
         inputText: string,
         analysisType: AnalysisType,
@@ -148,15 +170,15 @@ export class AnalysisWorkflowService implements OnDestroy {
     ): void {
         this.log(methodName, 'Performing offline analysis.');
 
+        // Creates an observable from a synchronous calculation result using `of()`.
         const subscription = of(this.analysisCalculationService.analyzeOffline(inputText, analysisType))
             .pipe(
                 delay(this.MIN_LOADING_DURATION_MS),
                 finalize(() => {
                     this.analysisStateManager.setLoading(false);
-                    this.log(methodName, 'Offline analysis finalized after minimum duration.');
                 })
             )
-            .subscribe(result => {
+            .subscribe(result => { // Subscribes to the observable to receive the calculated result.
                 currentAnalysis.result = result;
                 this.analysisHistoryService.addAnalysis(currentAnalysis);
                 this.log(methodName, 'Offline analysis completed.');
@@ -166,6 +188,5 @@ export class AnalysisWorkflowService implements OnDestroy {
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
-        this.log('ngOnDestroy', 'Subscriptions unsubscribed.');
     }
 }

@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
  * This service provides methods to count vowels or consonants from a text, both offline (client-side) and online (via a backend API). 
  */
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root', // Makes the service a singleton and available throughout the app
 })
 export class AnalysisCalculationService {
     // Base URL for the backend API, fetched from environment configuration.

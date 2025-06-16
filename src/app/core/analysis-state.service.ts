@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root', // Makes the service a singleton and available throughout the app
 })
 export class AnalysisStateManager {
     private readonly COMPONENT_NAME = '[AnalysisStateManager]';

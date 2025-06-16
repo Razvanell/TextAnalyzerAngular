@@ -10,6 +10,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AnalysisStateManager } from './core/analysis-state.service';
 
+/**
+ * Intercepts HTTP errors to display user-friendly messages.
+ */
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
@@ -17,7 +20,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   constructor(private injector: Injector) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Lazily get the AnalysisStateManager instance
+    // Lazily get the AnalysisStateManager instance. This prevents circular dependency issues if an http request is made.
     // This ensures AnalysisStateManager is fully initialized when it's requested
     const analysisStateManager = this.injector.get(AnalysisStateManager);
 
