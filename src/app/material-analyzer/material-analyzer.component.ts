@@ -69,15 +69,13 @@ export class MaterialAnalyzerComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    // This hook remains, though direct manipulation might not be needed
-    // if cdkTextareaAutosize handles everything automatically.
+    // This hook remains, though direct manipulation might not be needed if cdkTextareaAutosize handles everything automatically.
   }
 
   /**
    * Handles the input event from the textarea.
    * This method is triggered when the user types in the textarea.
-   * Logic related to input processing, like character counting or
-   * validation that needs to run on every keystroke, can be placed here.
+   * Logic related to input processing, like character counting or validation that needs to run on every keystroke, can be placed here.
    */
   onTextareaInput(): void {
     this.log('onTextareaInput', 'Textarea input changed.');

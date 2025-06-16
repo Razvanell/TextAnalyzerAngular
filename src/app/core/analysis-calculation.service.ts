@@ -19,14 +19,6 @@ export class AnalysisCalculationService {
 
     constructor(private http: HttpClient) { }
 
-    private isVowel(char: string): boolean {
-        return 'aeiouAEIOU'.includes(char);
-    }
-
-    private isLetter(char: string): boolean {
-        return char.toLowerCase() !== char.toUpperCase();
-    }
-
     /**
      * Performs text analysis directly on the client-side.
      * Only characters found in the text will be included in the result.
@@ -78,7 +70,7 @@ export class AnalysisCalculationService {
                 text: text,
             },
         }).pipe(
-            map(backendResponse => {
+            map(backendResponse => { //Map the backend response to the AnalysisResult format
                 const counts = backendResponse.characterCounts;
                 const formattedResult: AnalysisResult = {};
 
@@ -90,6 +82,14 @@ export class AnalysisCalculationService {
                 return formattedResult;
             })
         );
+    }
+
+    private isVowel(char: string): boolean {
+        return 'aeiouAEIOU'.includes(char);
+    }
+
+    private isLetter(char: string): boolean {
+        return char.toLowerCase() !== char.toUpperCase();
     }
 
 }
