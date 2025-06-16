@@ -1,3 +1,5 @@
+/* src/app/side-nav.component.css */
+
 .sidebar {
     width: 100px;
     background-color: #1e1e1e;
@@ -61,3 +63,55 @@
     transform: translateY(-50%);
     pointer-events: none;
 }
+
+/* --- Media Queries for Mobile Layout --- */
+
+@media (max-width: 48rem) { /* Screens 768px and smaller */
+    .sidebar {
+        /* Mobile (Top Bar) Styles for the <aside> element */
+        width: 100%; /* Take full width of the screen */
+        height: var(--top-nav-height-small); /* Set a fixed height for the top bar */
+        padding: 0; /* Remove padding from .sidebar as it moves to .sidebar nav */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); /* Keep shadow */
+        position: fixed; /* Make it fixed at the top for mobile */
+        top: 0;
+        left: 0;
+        z-index: 200; /* Ensure it's above other mobile content */
+        overflow-y: hidden; /* No vertical scroll for horizontal bar */
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+    }
+
+    .sidebar nav { /* TARGET THE <NAV> ELEMENT FOR MOBILE LAYOUT */
+        display: flex; /* Make children (h2, dropdown-wrapper) flex items */
+        flex-direction: row; /* Arrange items horizontally */
+        justify-content: space-between; /* Space out title and dropdown */
+        align-items: center; /* Vertically center items */
+        width: 100%; /* Ensure nav takes full width of the mobile sidebar */
+        height: 100%; /* Ensure nav takes full height of the mobile sidebar */
+        padding: 0.4rem 0.8rem; /* Apply padding here for inner content */
+    }
+
+    .sidebar h2 { /* Apply mobile-specific style to original h2 selector */
+        margin: 0; /* Remove specific margins from desktop layout */
+        font-size: 1em; /* Adjust font size for horizontal bar */
+        flex-shrink: 0; /* Prevent title from shrinking */
+    }
+
+    .dropdown-wrapper {
+        max-width: 180px; /* Max width for the dropdown in the top bar */
+        width: 70%; /* Allow it to be flexible */
+        flex-grow: 1; /* Allow it to grow if space permits */
+    }
+
+    .model-select {
+        font-size: 0.8em; /* Smaller font for select on mobile */
+    }
+
+    .dropdown-wrapper::after {
+        font-size: 0.6em; /* Smaller arrow for dropdown */
+        right: 5px;
+    }
+}
+
+

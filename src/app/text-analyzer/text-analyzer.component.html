@@ -9,7 +9,7 @@
             <div class="controls">
                 <div class="radio-group">
                     <label *ngFor="let typeOption of analysisTypes">
-                        <input type="radio" name="analysisType" [attr.value]="typeOption" [(ngModel)]="analysisType"
+                        <input type="radio" name="analysisTypeGroup" [value]="typeOption" [(ngModel)]="analysisType"
                             [disabled]="analysisStateManager.isLoading" />
                         {{ typeOption | titlecase }}
                     </label>
@@ -64,7 +64,8 @@
                 </div>
                 <span class="analysis-timestamp">{{ analysis.timestamp | date:'shortTime' }}</span>
             </h3>
-            <p><strong>Input:</strong> "{{ analysis.text }}"</p>
+            <p><strong>Input:</strong></p>
+            <div class="analysis-input-text scrollbar">"{{ analysis.text }}"</div>
             <div class="result-output" [innerHTML]="analysisHistoryService.formatResult(analysis.result)"></div>
         </div>
     </div>

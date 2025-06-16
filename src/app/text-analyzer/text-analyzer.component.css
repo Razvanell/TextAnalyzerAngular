@@ -1,3 +1,5 @@
+/* src/app/text-analyzer.component.css */
+
 .container {
     min-width: 60rem;
     max-width: 80rem;
@@ -259,6 +261,15 @@ button i {
     color: #E0E0E0;
 }
 
+.analysis-input-text {
+    max-height: 5em;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-right: 5px;
+    margin-bottom: 0.625rem;
+}
+
 .result-output {
     margin-top: 0.625rem;
     padding: 0.625rem;
@@ -324,3 +335,162 @@ button i {
         width: 100%;
     }
 }
+
+/* --- Media Queries for Mobile Layout --- */
+
+@media (max-width: 48rem) { /* Applies to screens 768px and smaller */
+    .container {
+        min-width: 100%;
+        max-width: 100%;
+        margin: 0.9375rem auto; /* Keep vertical margin, auto for horizontal centering */
+        padding: 0.5rem;
+
+        /* Mobile: Crucial - make it fill the height of its parent (main-content-wrapper) */
+        height: calc(100% - 1.875rem); /* Fill parent height minus its own vertical margins */
+        overflow-y: auto; /* Make the container itself scrollable */
+        overflow-x: hidden; /* Prevent horizontal scroll */
+
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* Existing mobile styles for header, input-section, controls etc. remain,
+       and their flex-shrink: 0 will ensure they don't get squashed */
+    .header {
+        margin-top: 1.5rem;
+        font-size: 1.3rem; /* Adjusted font size for smaller screens (from 37.5rem) */
+        padding-left: 0;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .input-section {
+        gap: 0.625rem;
+        flex-shrink: 0;
+    }
+
+    textarea {
+        min-height: 5rem; /* Adjusted min-height (from 37.5rem) */
+        max-height: 10rem; /* Adjusted max-height (from 37.5rem) */
+        font-size: 0.9rem;
+    }
+
+    .char-count {
+        padding-right: 0.625rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.625rem;
+        padding: 0.5rem 0.8rem;
+        flex-shrink: 0;
+    }
+
+    .radio-group {
+        justify-content: center;
+        width: 100%;
+        gap: 0.625rem;
+    }
+
+    .radio-group label {
+        font-size: 1rem;
+    }
+
+    .toggle-switch {
+        justify-content: center;
+        width: 100%;
+    }
+
+    button {
+        justify-content: center;
+        width: 100%;
+        height: 2rem;
+        border-radius: 0.25rem;
+    }
+
+    .error-message {
+        padding: 0.625rem 1rem;
+        font-size: 0.9em;
+        flex-shrink: 0;
+    }
+
+    .loading-indicator {
+        padding: 0.8rem 0;
+        font-size: 1em;
+        flex-shrink: 0;
+    }
+
+    .history-scroll-container {
+        padding-right: 0.625rem;
+        margin-top: 1rem;
+        flex-grow: 1; /* This is crucial for it to take remaining height */
+        overflow-y: auto; /* And this makes it scroll */
+    }
+
+    .history-scroll-container h2 {
+        font-size: 1.2rem; /* Adjusted font size for history header (from 37.5rem) */
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.4rem;
+        padding-top: 0.1rem;
+        position: sticky; /* Keep sticky behavior */
+        top: 0; /* Stick to the top of its scroll container */
+        z-index: 10;
+    }
+
+    .no-history {
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        font-size: 0.9em;
+        position: sticky; /* Keep sticky behavior */
+        top: 2.2rem;
+        z-index: 9;
+    }
+
+    .analysis-card {
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.625rem;
+    }
+
+    .analysis-card h3 {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 0.0rem;
+    }
+
+    .analysis-card .analysis-header-group {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .analysis-card .analysis-type-display {
+        margin-left: 0;
+        margin-top: 0.2rem;
+        font-size: 0.85em;
+    }
+
+    .analysis-card .analysis-timestamp {
+        margin-left: 0;
+        margin-top: 0.4rem;
+        text-align: left;
+        width: 100%;
+    }
+
+    .analysis-card p {
+        font-size: 0.9em;
+    }
+
+    .analysis-input-text {
+        max-height: 3em; /* Adjusted max-height (from 37.5rem) */
+        font-size: 0.85em;
+    }
+
+    .result-output {
+        padding: 0.5rem;
+        max-height: 6rem; /* Adjusted max-height (from 37.5rem) */
+        font-size: 0.9em;
+    }
+}
+

@@ -18,3 +18,29 @@
   overflow: hidden; /* Ensures no scrolling in this wrapper */
   background-color: #131313; /* Consistent with global dark theme */
 }
+
+/* --- Media Queries for Mobile Layout --- */
+
+:root {
+    --top-nav-height: 4rem; /* Default height for the mobile top navigation */
+    --top-nav-height-small: 3.5rem; /* Smaller height for very small mobile screens */
+}
+
+@media (max-width: 48rem) { /* Common breakpoint for tablets/larger phones (768px) */
+    .app-container {
+        flex-direction: column; /* On mobile, stack sidebar on top of main content */
+    }
+
+    .main-content-wrapper {
+        /* Mobile: It now needs to take the remaining height of the viewport */
+        height: calc(100vh - var(--top-nav-height-small));  /* Calculate height excluding top nav */
+        overflow-y:auto; 
+        
+        /* Remove desktop centering as content in router-outlet will manage its own layout */
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        padding-top: var(--top-nav-height-small); /* Push content below the new fixed top bar */
+        padding-bottom: 0; /* Let the component inside handle its own bottom padding */
+    }
+}

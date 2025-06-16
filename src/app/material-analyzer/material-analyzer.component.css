@@ -1,229 +1,370 @@
+/* src/app/material-analyzer.component.css */
+
 .app-container {
-  min-width: 50rem;
-  max-width: 70rem;
-  margin: 0.9375rem auto;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 1rem);
+    min-width: 50rem;
+    max-width: 70rem;
+    margin: 0.9375rem auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 1rem); /* Desktop Style */
+    overflow: hidden; /* Crucial for desktop to contain sticky elements */
 }
 
 /* Card Styling */
 .input-card,
 .history-card,
 .analysis-item-card {
-  margin-bottom: 0.9375rem;
+    margin-bottom: 0.9375rem;
 }
 
 /* Card Titles */
 .card-header-title {
-  margin-top: 0;
-  margin-bottom: 0.625rem;
-  padding-left: 0.625rem;
-  font-size: 1.8rem;
-  font-weight: bold;
-  flex-shrink: 0;
+    margin-top: 0;
+    margin-bottom: 0.625rem;
+    padding-left: 0.625rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    flex-shrink: 0;
 }
 
 /* Input Card Content */
 .input-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9375rem;
-  padding-top: 0.9375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9375rem;
+    padding-top: 0.9375rem;
 }
 
 /* Textarea Field */
 .full-width-textarea-field {
-  width: 100%;
+    width: 100%;
 }
 
 .full-width-textarea-field textarea {
-  min-height: 7.5rem;
-  max-height: 18.75rem;
-  resize: vertical;
-  border: none;
-  flex-grow: 1;
-  flex-shrink: 1;
-  border-top-left-radius: 0.625rem;
-  border-top-right-radius: 0.625rem;
+    min-height: 7.5rem;
+    max-height: 18.75rem;
+    resize: vertical;
+    border: none;
+    flex-grow: 1;
+    flex-shrink: 1;
+    border-top-left-radius: 0.625rem;
+    border-top-right-radius: 0.625rem;
 }
 
 /* Controls Wrapper */
 .controls-wrapper {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.9375rem;
-  padding: 0.625rem 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.9375rem;
+    padding: 0.625rem 0;
 }
 
 /* Radio Group */
 .analysis-type-group {
-  display: flex;
-  gap: 0.9375rem;
-  flex-wrap: wrap;
-  flex-grow: 1;
+    display: flex;
+    gap: 0.9375rem;
+    flex-wrap: wrap;
+    flex-grow: 1;
 }
 
 /* Toggle and Character Count */
 .toggle-and-count-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
 }
 
 .char-count {
-  font-size: 0.9em;
-  flex-shrink: 0;
+    font-size: 0.9em;
+    flex-shrink: 0;
 }
 
 .char-count.limit-reached {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 /* Button Icon */
 .button-icon {
-  font-size: 1.2rem;
+    font-size: 1.2rem;
 }
 
 /* Error Message */
 .error-message {
-  border-radius: 0.25rem;
-  padding: 0.75rem 1.25rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.625rem;
-  text-align: center;
-  flex-shrink: 0;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.625rem;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 /* Loading Progress Bar */
 .loading-progress-bar {
-  margin-top: 1.25rem;
-  max-width: 37.5rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 0.9375rem;
+    margin-top: 1.25rem;
+    max-width: 37.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.9375rem;
 }
 
 /* History Section */
 .history-card {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* This needs to be overridden on mobile if history-content-scroll scrolls */
+    position: relative; /* Needed for sticky elements inside (e.g. h2/no-history) */
 }
 
 .history-content-scroll {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding-right: 0.9375rem;
-  padding-bottom: 0;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 0.9375rem;
+    padding-bottom: 0;
 }
 
 /* No History Message */
 .no-history {
-  text-align: center;
-  padding: 1.25rem;
-  border: 0.0625rem dashed;
-  border-radius: 0.375rem;
-  margin-bottom: 1.25rem;
+    text-align: center;
+    padding: 1.25rem;
+    border: 0.0625rem dashed;
+    border-radius: 0.375rem;
+    margin-bottom: 1.25rem;
 }
 
 /* Individual Analysis Item Card */
 .analysis-item-card.error {
-  border-left: 0.3125rem solid;
+    border-left: 0.3125rem solid;
 }
 
 /* History Item Header */
 .analysis-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .analysis-item-header .mat-card-title.analysis-type-text {
-  margin-top: 0;
-  margin-bottom: 0.625rem;
-  font-size: 1.2em;
-  flex-grow: 1;
-  margin-right: 1rem;
+    margin-top: 0;
+    margin-bottom: 0.625rem;
+    font-size: 1.2em;
+    flex-grow: 1;
+    margin-right: 1rem;
 }
 
 /* Timestamp */
 .analysis-timestamp {
-  font-size: 0.8em;
-  text-align: right;
-  padding-left: 0.5rem;
-  flex-shrink: 0;
+    font-size: 0.8em;
+    text-align: right;
+    padding-left: 0.5rem;
+    flex-shrink: 0;
 }
 
 /* Analysis Item Content */
 .analysis-item-content p {
-  margin: 0.3125rem 0;
-  white-space: pre-wrap;
-  word-break: break-word;
+    margin: 0.3125rem 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Analysis Card Input Text Scrolling for Material Design */
+.analysis-item-content .analysis-input-paragraph {
+    display: flex; /* Use flexbox to align "Input:" and the text nicely */
+    align-items: baseline; /* Align the text baselines */
+    margin: 0.3125rem 0;
+}
+
+.analysis-item-content .analysis-input-paragraph strong {
+    flex-shrink: 0; /* Prevent "Input:" from shrinking */
+    margin-right: 0.5em; /* Add some space between "Input:" and the text */
+}
+
+.analysis-input-text-material {
+    display: inline-block; /* Essential for max-height and overflow to work */
+    flex-grow: 1; /* Allow the text span to take up available space */
+    max-height: 5em;
+    overflow-y: auto;
+    white-space: pre-wrap; /* Preserve line breaks and whitespace */
+    word-break: break-word; /* Break long words to prevent overflow */
+    padding-right: 5px;
 }
 
 /* Result Output */
 .result-output {
-  margin-top: 0.625rem;
-  padding: 0.625rem;
-  font-family: 'Courier New', Courier, monospace;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 12.5rem;
-  overflow-y: auto;
-  border-left: 0.25rem solid;
-  border-radius: 0.25rem;
+    margin-top: 0.625rem;
+    padding: 0.625rem;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 12.5rem;
+    overflow-y: auto;
+    border-left: 0.25rem solid;
+    border-radius: 0.25rem;
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 37.5rem) {
-  .controls-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-  }
+/* --- Media Queries for Mobile Layout --- */
 
-  .analysis-type-group {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.625rem;
-  }
+@media (max-width: 48rem) { /* Applies to screens 768px and smaller */
+    .app-container {
+        min-width: unset; /* Remove min-width for mobile */
+        max-width: 100%; /* Take full width */
+        margin: 0.9rem auto; /* Maintain vertical margin, auto horizontal */
+        padding: 0.6rem; /* Reduce overall padding */
 
-  .toggle-and-count-wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
+        /* Mobile: Make this the main scrollable container for its children */
+        height: calc(100% - 1.875rem); /* Fill parent (main-content-wrapper) height minus its own margins */
+        overflow-y: auto; /* Allow app-container content to scroll */
+        overflow-x: hidden; /* Prevent horizontal scroll */
+        box-shadow: none; /* Remove shadow for mobile */
+        border-radius: 0; /* Remove border-radius for mobile */
+    }
 
-  .char-count {
-    text-align: center;
-  }
+    /* Input Card (The part that should always be visible) */
+    .input-card {
+        flex-shrink: 0; /* Prevent this card from shrinking its height */
+        position: sticky; /* Make it sticky to the top of its scrolling parent (.app-container) */
+        top: 0; /* Stick to the very top */
+        background-color: #121212; /* Ensure it has a solid background */
+        z-index: 10; /* Keep it above the scrolling history */
+        margin-bottom: 0.625rem; /* Space between input and history */
+        padding-bottom: 0.625rem; /* Add internal bottom padding for separation */
+    }
 
-  .controls-wrapper button {
-    width: 100% !important;
-    height: 3rem !important;
-    border-radius: 0.25rem;
-  }
+    /* Input Card Header */
+    .card-header-title {
+        font-size: 1.2rem; /* Smaller header font */
+        padding: 0; /* Remove left padding */
+        text-align: center; /* Center header text */
+    }
 
-  .analysis-item-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+    /* Input Card Content */
+    .input-card-content {
+        gap: 0rem; /* Reduce gap between elements */
+    }
 
-  .analysis-item-header .mat-card-title.analysis-type-text {
-    margin-right: 0;
-    margin-bottom: 0.25rem;
-  }
+    /* Textarea Field */
+    .full-width-textarea-field textarea {
+        min-height: 4rem; /* Slightly smaller min-height for textarea */
+        max-height: 8rem; /* Smaller max-height */
+        font-size: 0.8rem; /* Smaller font size for textarea */
+    }
 
-  .analysis-timestamp {
-    margin-left: 0;
-    margin-top: 0.5rem;
-    text-align: left;
-    width: 100%;
-  }
+    /* Controls Wrapper */
+    .controls-wrapper {
+        flex-direction: column; /* Stack controls vertically */
+        align-items: stretch; /* Stretch items to fill width */
+        gap: 0.6rem; /* Reduce gap between control elements */
+        padding: 0; /* Adjust padding for controls */
+    }
+
+    /* Radio Group */
+    .analysis-type-group {
+        justify-content: center; /* Center radio buttons */
+        width: 100%; /* Take full width */
+        gap: 0rem;
+    }
+
+    .analysis-type-group .mat-radio-button .mat-radio-label-content {
+        font-size: 1rem; /* Smaller font for radio labels */
+    }
+
+    /* Toggle and Character Count Wrapper */
+    .toggle-and-count-wrapper {
+        justify-content: center; /* Center toggle switch */
+        width: 100%; /* Take full width */
+    }
+
+    /* Buttons */
+    .controls-wrapper button {
+        width: 2.2rem !important; /* Make buttons full width */
+        height: 2rem !important; /* Increase button height for easier tapping */
+        border-radius: 0.25rem; /* Change to square corners */
+    }
+
+    /* Error Message */
+    .error-message {
+        padding: 0rem; /* Adjust padding */
+        font-size: 0.9em;
+    }
+
+    /* Loading Progress Bar */
+    .loading-progress-bar {
+        padding: 0rem; /* Adjust padding */
+        font-size: 1em;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 90%;
+    }
+
+    /* History Card */
+    .history-card {
+        flex-grow: 1; /* This card will now take all remaining height */
+        overflow: hidden; /* Hide overflow on the history-card itself, history-content-scroll handles scroll */
+        margin-top: 0; /* Ensure no top margin pushing it down */
+        padding-top: 0; /* Ensure no top padding pushing it down */
+    }
+
+    .history-content-scroll {
+        padding-right: 0rem;
+        padding-bottom: 0rem;
+        /* flex-grow: 1 and overflow-y: auto already exist and are correct */
+    }
+
+    /* No History Message */
+    .no-history {
+        padding: 0rem; /* Adjust padding */
+        margin-bottom: 0rem; /* Adjust margin */
+        font-size: 0.9em;
+        position: sticky; /* Keep sticky behavior */
+        top: 0.5rem; /* Adjusted sticky position relative to its parent's scroll */
+        z-index: 9;
+    }
+
+    /* Analysis Item Card (Individual History Item) */
+    .analysis-item-card {
+        padding: 0rem; /* Adjust padding */
+        margin-bottom: 1rem; /* Reduce margin */
+    }
+
+    /* History Item Header */
+    .analysis-item-header {
+        flex-direction: column; /* Stack analysis header vertically */
+        align-items: flex-start; /* Align header content to start */
+        margin-bottom: 0rem;
+    }
+
+    .analysis-item-header .mat-card-title.analysis-type-text {
+        margin: 0rem;
+    }
+
+    .analysis-type-text {
+        font-size: 1.1rem;
+    }
+
+    .analysis-timestamp {
+        margin: 0rem;
+        text-align: right;
+        width: 100%;
+    }
+
+    /* Analysis Card Input Text Scrolling */
+    .analysis-card p {
+        font-size: 0.9em; /* Smaller paragraph text */
+    }
+
+    .analysis-input-text-material {
+        max-height: 4em; /* Smaller max height for input text */
+        font-size: 0.9em;
+    }
+
+    /* Result Output */
+    .result-output {
+        padding: 0.2rem; /* Reduce padding */
+        max-height: 8rem; /* Smaller max height for result output */
+        font-size: 0.9em;
+    }
 }
