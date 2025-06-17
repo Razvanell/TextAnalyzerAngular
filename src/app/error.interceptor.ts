@@ -43,7 +43,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         // Set the user-facing error message using the lazily-loaded state manager
         analysisStateManager.setErrorMessage(userFriendlyMessage);
 
-        // Re-throw the error
+        /* Re-throwing the Error ensures that while the interceptor handles the global messaging, any component/service that explicitly subscribes to the HttpClient observable still receives the error. 
+        This allows for specific, localized error handling (e.g., displaying validation messages on a form) if needed, without preventing the global handler from running. 
+        */
         return throwError(() => error);
       })
     );

@@ -347,8 +347,8 @@ button i {
 
         /* Mobile: Crucial - make it fill the height of its parent (main-content-wrapper) */
         height: calc(100% - 1.875rem); /* Fill parent height minus its own vertical margins */
-        overflow-y: auto; /* Make the container itself scrollable */
-        overflow-x: hidden; /* Prevent horizontal scroll */
+        overflow-y: auto;
+        overflow-x: hidden;
 
         box-shadow: none;
         border-radius: 0;
@@ -358,7 +358,7 @@ button i {
        and their flex-shrink: 0 will ensure they don't get squashed */
     .header {
         margin-top: 1.5rem;
-        font-size: 1.3rem; /* Adjusted font size for smaller screens (from 37.5rem) */
+        font-size: 1.3rem;
         padding-left: 0;
         text-align: center;
         flex-shrink: 0;
@@ -370,8 +370,8 @@ button i {
     }
 
     textarea {
-        min-height: 5rem; /* Adjusted min-height (from 37.5rem) */
-        max-height: 10rem; /* Adjusted max-height (from 37.5rem) */
+        min-height: 5rem;
+        max-height: 10rem;
         font-size: 0.9rem;
     }
 
@@ -429,7 +429,7 @@ button i {
     }
 
     .history-scroll-container h2 {
-        font-size: 1.2rem; /* Adjusted font size for history header (from 37.5rem) */
+        font-size: 1.2rem;
         margin-bottom: 0.8rem;
         padding-bottom: 0.4rem;
         padding-top: 0.1rem;

@@ -82,6 +82,7 @@ export class AnalysisHistoryService {
       return 'No relevant characters found or empty input.';
     }
     return Object.entries(result)
+      .sort(([charA, countA], [charB, countB]) => charA.localeCompare(charB)) // Sorts alphabetically by character
       .map(([char, count]) => `Letter '${char}' appears ${count} times`)
       .join('<br>');
   }
